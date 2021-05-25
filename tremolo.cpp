@@ -36,7 +36,7 @@ class Terrarium
 	    };
 };
 
-static Parameter depth1, depth2, freq1, freq2;
+static Parameter depth1, depth2, freq1, freq2, vol;
 
 float sample_rate;
 
@@ -75,6 +75,7 @@ void AudioCallback(float **in, float **out, size_t size)
         if (second){
            value = trem2.Process(value);
         }
+        value = value * vol.Process();
         out[0][i] = out[1][i] = value;
     }
 
@@ -92,6 +93,7 @@ int main(void)
     depth2.Init(hw.knob[Terrarium::KNOB_4], 0.f, 1.f, depth2.LINEAR);
     freq1.Init(hw.knob[Terrarium::KNOB_2], 0.5f, 10.f, freq1.LINEAR);
     freq2.Init(hw.knob[Terrarium::KNOB_5], 0.5f, 10.f, freq1.LINEAR);
+    vol.Init(hw.knob[Terrarium::KNOB_3], 0.5f, 5.f, vol.LINEAR);
 
     trem.Init(sample_rate);
     trem2.Init(sample_rate);
