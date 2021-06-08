@@ -6,6 +6,8 @@ using namespace daisysp;
 
 bool second = false;
 bool single = false;
+bool wave = false;
+bool wave2 = false;
 
 class Terrarium
 {
@@ -54,6 +56,32 @@ void AudioCallback(float **in, float **out, size_t size)
 
     trem2.SetFreq(freq2.Process());
     trem2.SetDepth(depth2.Process());
+   
+    if (hw.switches[Terrarium::SWITCH_1].RisingEdge())
+    {
+        wave = !wave;
+    }
+    
+    if (wave)
+    {
+        trem.SetWaveform(Oscillator::WAVE_SQUARE);
+    } else {
+        trem.SetWaveform(Oscillator::WAVE_SIN);
+    }
+    
+ if (hw.switches[Terrarium::SWITCH_2].RisingEdge())
+    {
+        wave2 = !wave2;
+    }
+
+    if (wave2)
+    {
+        trem2.SetWaveform(Oscillator::WAVE_SQUARE);
+    } else {
+        trem2.SetWaveform(Oscillator::WAVE_SIN);
+    }
+    
+
 
     if (hw.switches[Terrarium::FOOTSWITCH_2].RisingEdge())
     {
@@ -93,10 +121,12 @@ int main(void)
     depth2.Init(hw.knob[Terrarium::KNOB_4], 0.f, 1.f, depth2.LINEAR);
     freq1.Init(hw.knob[Terrarium::KNOB_2], 0.5f, 10.f, freq1.LINEAR);
     freq2.Init(hw.knob[Terrarium::KNOB_5], 0.5f, 10.f, freq1.LINEAR);
-    vol.Init(hw.knob[Terrarium::KNOB_3], 0.5f, 5.f, vol.LINEAR);
+    vol.Init(hw.knob[Terrarium::KNOB_3], 0.5f, 2.f, vol.LINEAR);
 
     trem.Init(sample_rate);
     trem2.Init(sample_rate);
+
+    
     
     trem.SetFreq(2.f);
     trem.SetDepth(1.f);
